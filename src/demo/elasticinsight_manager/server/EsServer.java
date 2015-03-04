@@ -1,5 +1,7 @@
 package demo.elasticinsight_manager.server;
 
+import java.util.Date;
+
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -45,6 +47,16 @@ public class EsServer {
 		String id_str = id.toString();
 		if (!(id instanceof String)) {			
 			obj.put("_id", id_str);
+		}
+		//TODO: logstash special case/workaround:
+		Object ts = obj.get("@timestamp");
+		if (null != ts) {
+			if (ts instanceof Date) {
+				obj.put("@timestamp", ((Date)ts).getTime());
+			}
+			else {
+				obj.put("@timestamp", ts.toString());
+			}
 		}
 		
 		//org.elasticsearch.action.index.IndexResponse response = 
