@@ -1,4 +1,4 @@
-package demo.elasticsinsight_manager.utils;
+package demo.elasticinsight_manager.utils;
 
 // Immutable tuples class
 // Call t = Tuples._<n>(_1, ..., _n) and then t._1(), t._2() etc 

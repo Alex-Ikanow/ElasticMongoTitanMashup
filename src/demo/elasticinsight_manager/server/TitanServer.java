@@ -19,7 +19,7 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.util.ElementHelper;
 
-import demo.elasticsinsight_manager.utils.Optionals;
+import demo.elasticinsight_manager.utils.Optionals;
 
 public class TitanServer {
 

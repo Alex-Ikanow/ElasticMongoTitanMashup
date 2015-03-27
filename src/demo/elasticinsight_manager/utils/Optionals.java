@@ -1,4 +1,4 @@
-package demo.elasticsinsight_manager.utils;
+package demo.elasticinsight_manager.utils;
 
 import java.util.Collection;
 import java.util.Collections;
