@@ -2,16 +2,20 @@ package demo.elasticinsight_manager.events;
 
 import org.bson.types.ObjectId;
 
+import com.google.inject.Inject;
 import com.mongodb.BasicDBObject;
 
 import demo.elasticinsight_manager.server.EsServer;
 import demo.elasticinsight_manager.server.MongoServer;
-import demo.elasticinsight_manager.server.TitanServer;
+import demo.elasticinsight_manager.services.GraphDbService;
 
 public class MongoNewDocument {
 
 	protected String[] _db_collection;
 	protected BasicDBObject _inserted_obj;
+	
+	@Inject
+	protected GraphDbService _graphDbService;
 	
 	public MongoNewDocument(String[] db_collection, BasicDBObject inserted_obj) {
 		_db_collection = db_collection;
@@ -59,6 +63,6 @@ public class MongoNewDocument {
 		
 		//TODO: only do this if graph analysis settings
 		//TODO: in practice this needs things like index_name
-		TitanServer.addObjectGraphables(index_name, _inserted_obj);
+		_graphDbService.addObjectGraphables(index_name, _inserted_obj);
 	}
 }

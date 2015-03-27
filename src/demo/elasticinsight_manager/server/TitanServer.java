@@ -19,9 +19,10 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.util.ElementHelper;
 
+import demo.elasticinsight_manager.services.GraphDbService;
 import demo.elasticinsight_manager.utils.Optionals;
 
-public class TitanServer {
+public class TitanServer implements GraphDbService {
 
 	protected static TitanGraph _graph = null;
 	protected static long _last_graph_update = 0L; 
@@ -57,7 +58,7 @@ public class TitanServer {
 	protected static TitanMonitorThread _monitor_thread = new TitanMonitorThread();
 	protected static boolean _monitor_thread_running = false;
 
-	public static void deleteGraphFromCollection(String index_name) {
+	public void deleteGraphFromCollection(String index_name) {
 		synchronized (_monitor_thread) {
 			createGraphIfNeeded();
 			
@@ -74,7 +75,7 @@ public class TitanServer {
 		}		
 	}
 	
-	public static void addObjectGraphables(String index_name, BasicDBObject obj) {
+	public void addObjectGraphables(String index_name, BasicDBObject obj) {
 		final BasicDBObject annotations = (BasicDBObject) obj.get("_@");
 		if (null == annotations) {
 			//TODO: in practice this should check the schema etc etx
@@ -258,7 +259,7 @@ public class TitanServer {
 		}		
 	}
 	
-	protected static void createGraphIfNeeded() {
+	protected void createGraphIfNeeded() {
 		if (!_monitor_thread_running) {
 			_monitor_thread_running = true;
 			_monitor_thread.start();
@@ -269,7 +270,7 @@ public class TitanServer {
 		}
 	}
 	
-	protected static TitanGraph create(final String directory) {
+	protected TitanGraph create(final String directory) {
         final String INDEX_NAME = "search";	
     	
         final TitanFactory.Builder config = TitanFactory.build();
@@ -309,8 +310,9 @@ public class TitanServer {
 
     // Example
 	public static void main(String[] args) throws Exception {
+		TitanServer me = new TitanServer();
 		System.out.println("Creating graph:");
-		final TitanGraph g = create("/tmp/berkeley-insight/");
+		final TitanGraph g = me.create("/tmp/berkeley-insight/");
 		System.out.println("Created graph:");
 		g.shutdown();
 		System.out.println("Shutting down:");
