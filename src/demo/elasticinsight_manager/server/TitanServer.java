@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.StreamSupport;
 
+import com.google.inject.Singleton;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.thinkaurelius.titan.core.PropertyKey;
@@ -22,14 +23,26 @@ import com.tinkerpop.blueprints.util.ElementHelper;
 import demo.elasticinsight_manager.services.GraphDbService;
 import demo.elasticinsight_manager.utils.Optionals;
 
+@Singleton
 public class TitanServer implements GraphDbService {
 
+	
+	////////////////////////////////////////////////
+	
+	// Debug
+	
+	protected static boolean DEBUG = false;
+	protected static boolean INFO = true;
+	
+	////////////////////////////////////////////////
+	
+	// Implementation
+	
+	protected TitanServer() {} // (can only create via DI)
+	
 	protected static TitanGraph _graph = null;
 	protected static long _last_graph_update = 0L; 
 	public static final long TITAN_TIMEOUT_MS = 30000L;
-	
-	protected static boolean _DEBUG = false;
-	protected static boolean _INFO = true;
 	
 	static class TitanMonitorThread extends Thread {
 		public void run() {
@@ -41,7 +54,7 @@ public class TitanServer implements GraphDbService {
 					{
 						if (null != _graph) {
 							//INFO
-							if (_INFO) System.out.println("(released global Titan lock)");
+							if (INFO) System.out.println("(released global Titan lock)");
 							
 							try {
 								_graph.shutdown();

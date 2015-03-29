@@ -3,6 +3,8 @@ package demo.elasticinsight_manager.threads;
 public class EsIndexMappingMonitor implements Runnable {
 	protected Thread _thread;
 	public EsIndexMappingMonitor() {
+	}
+	public void start() {
 		_thread = new Thread(this);
 		_thread.start();
 	}

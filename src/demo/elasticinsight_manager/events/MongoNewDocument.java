@@ -3,11 +3,12 @@ package demo.elasticinsight_manager.events;
 import org.bson.types.ObjectId;
 
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.mongodb.BasicDBObject;
 
-import demo.elasticinsight_manager.server.EsServer;
 import demo.elasticinsight_manager.server.MongoServer;
 import demo.elasticinsight_manager.services.GraphDbService;
+import demo.elasticinsight_manager.services.IndexingService;
 
 public class MongoNewDocument {
 
@@ -17,7 +18,11 @@ public class MongoNewDocument {
 	@Inject
 	protected GraphDbService _graphDbService;
 	
-	public MongoNewDocument(String[] db_collection, BasicDBObject inserted_obj) {
+	@Inject 
+	protected IndexingService _indexService;
+	
+	@Inject 
+	protected MongoNewDocument(@Assisted String[] db_collection, @Assisted BasicDBObject inserted_obj) {
 		_db_collection = db_collection;
 		_inserted_obj = inserted_obj;
 	}
@@ -43,7 +48,7 @@ public class MongoNewDocument {
 			index_sb.append(_db_collection[0]).append('.').append(_db_collection[1]);			
 		}
 		String index_name = index_sb.toString();
-		BasicDBObject index_stylesheet = EsServer.getStylesheet(index_name);
+		BasicDBObject index_stylesheet = _indexService.getStylesheet(index_name);
 		
 		if (null == index_stylesheet) {
 			//new EsNewIndex(index_name).async_execute().wait();
@@ -59,7 +64,7 @@ public class MongoNewDocument {
 		//TODO: on failure, if _notype specified then might need to create a new type (I think we get that error back?)
 		//TODO: (longer term might want to compare object vs mappings up front? maybe as part of serialization?!)
 		
-		EsServer.indexObject(index_name, type_name, _inserted_obj);
+		_indexService.indexObject(index_name, type_name, _inserted_obj);
 		
 		//TODO: only do this if graph analysis settings
 		//TODO: in practice this needs things like index_name

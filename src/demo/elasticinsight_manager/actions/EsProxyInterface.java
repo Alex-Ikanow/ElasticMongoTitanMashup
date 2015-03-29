@@ -23,6 +23,12 @@ import org.restlet.resource.ServerResource;
 
 public class EsProxyInterface extends ServerResource {
 
+	//TODO (This code isn't used yet, so this is just an outline implementation)
+	
+	//___________________________________________________________________________________
+	
+	// Debugging
+	
 	public static boolean DEBUG = true; 
 	
 	//___________________________________________________________________________________

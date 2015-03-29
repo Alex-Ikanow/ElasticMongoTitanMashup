@@ -7,10 +7,20 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 
+import com.google.inject.Singleton;
 import com.mongodb.BasicDBObject;
 
-public class EsServer {
+import demo.elasticinsight_manager.services.IndexingService;
 
+@Singleton
+public class EsServer implements IndexingService {
+
+	////////////////////////////////////////////////
+	
+	// Implementation
+
+	protected EsServer() {} // (can only be created by DI)
+	
 	static protected Client _client = null;
 	static protected void createClientIfNeeded() {
 		if (null == _client) {
@@ -18,23 +28,39 @@ public class EsServer {
 		}		
 	}
 	
-	public static synchronized BasicDBObject getStylesheet(String index_name) {
+	/* (non-Javadoc)
+	 * @see demo.elasticinsight_manager.server.IndexingService#getStylesheet(java.lang.String)
+	 */
+	@Override
+	public synchronized BasicDBObject getStylesheet(String index_name) {
 		//TODO return a pojo in fact? or a Map?
 		return new BasicDBObject("name", "type1"); //TODO: will just treat every object the same
 	}
 
-	public static void deleteIndex(String index_name) {
+	/* (non-Javadoc)
+	 * @see demo.elasticinsight_manager.server.IndexingService#deleteIndex(java.lang.String)
+	 */
+	@Override
+	public void deleteIndex(String index_name) {
 		createClientIfNeeded();
 		//org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse delete = 
 		_client.admin().indices().delete(new DeleteIndexRequest(index_name)).actionGet();
 	}
 
-	public static void deleteObjectById(String index_name, String type_name, Object id) {
+	/* (non-Javadoc)
+	 * @see demo.elasticinsight_manager.server.IndexingService#deleteObjectById(java.lang.String, java.lang.String, java.lang.Object)
+	 */
+	@Override
+	public void deleteObjectById(String index_name, String type_name, Object id) {
 		createClientIfNeeded();		
 		_client.prepareDelete(index_name, type_name, id.toString()).execute().actionGet();
 	}
 	
-	public static void indexObject(String index_name, String type_name, BasicDBObject obj) {
+	/* (non-Javadoc)
+	 * @see demo.elasticinsight_manager.server.IndexingService#indexObject(java.lang.String, java.lang.String, com.mongodb.BasicDBObject)
+	 */
+	@Override
+	public void indexObject(String index_name, String type_name, BasicDBObject obj) {
 		createClientIfNeeded();
 		
 		// Handle _id - ObjectId is not parsed by elasticsearch:
