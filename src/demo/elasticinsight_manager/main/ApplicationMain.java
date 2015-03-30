@@ -12,7 +12,10 @@ public class ApplicationMain {
 
 	public static void main(String[] args) throws Exception {
 		
-		Injector serverInjector = Guice.createInjector(new ProductionServiceInjection());		
+		/**/
+		//TODO: switch between test/normal
+		//Injector serverInjector = Guice.createInjector(new ProductionServiceInjection());		
+		Injector serverInjector = Guice.createInjector(new TestServiceInjection());		
 		AppServer appServer = serverInjector.getInstance(AppServer.class);
 		
 		Component component = new Component();

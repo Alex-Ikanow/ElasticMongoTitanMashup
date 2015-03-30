@@ -1,7 +1,7 @@
 package demo.elasticinsight_manager.events;
 
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
@@ -13,9 +13,11 @@ public class MongoUpdatedDocument {
 	protected String[] _db_collection;
 	protected BasicDBObject _updating_id_query;
 	
-	@Inject
-	protected MongoUpdatedDocument(@Assisted String[] db_collection,
-			@Assisted BasicDBObject op_obj_id, @Assisted BasicDBObject op_update_info) {
+	@AssistedInject
+	protected MongoUpdatedDocument(@Assisted("db_collection") String[] db_collection,
+									@Assisted("op_obj_id") BasicDBObject op_obj_id,
+									@Assisted("op_update_info") BasicDBObject op_update_info) 
+	{
 		_db_collection = db_collection;
 		_updating_id_query = op_obj_id;
 	}

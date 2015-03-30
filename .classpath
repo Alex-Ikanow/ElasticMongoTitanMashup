@@ -234,6 +234,8 @@
 	<classpathentry kind="lib" path="/home/alex/titan-0.5.4-hadoop1/lib/zookeeper-3.4.6.jar"/>
 	<classpathentry kind="lib" path="lib/guice-4.0-beta5.jar"/>
 	<classpathentry kind="lib" path="lib/guice-assistedinject-4.0-beta5.jar"/>
+	<classpathentry kind="lib" path="lib/javax.inject.jar"/>
+	<classpathentry kind="lib" path="lib/aopalliance-alpha1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
