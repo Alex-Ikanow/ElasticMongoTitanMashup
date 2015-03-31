@@ -144,30 +144,4 @@ public class Patterns {
 			}
 		}		
 	}	
-	
-	////////////////////////////////////////////////////////
-	
-	// TEST
-	//TODO: move to JUnit test
-	
-	public static void main(String[] args) {
-		Object o = new Double(3.0); //or 5
-		
-		String s = Patterns.matchAndReturn(o)
-			.when(String.class, ss -> ss + ": string")
-			.when(Double.class, t -> t < 4.0, d -> "1: " + d.getClass().toString())
-			.when(Double.class, d -> "2: " + d.getClass().toString())
-			.when(Boolean.class, b -> b ? "true" : "false")
-			.otherwise("unknown");
-
-		Patterns.matchAndAct(o)
-			.allowMultiple()
-			.when(String.class, ss -> System.out.println(ss + ": string"))
-			.when(Double.class, t -> t < 4.0, d -> System.out.println("1: " + d.getClass().toString()))
-			.when(Double.class, d -> System.out.println("2: " + d.getClass().toString()))
-			.when(Boolean.class, b -> System.out.println(b ? "true" : "false"))
-			.otherwise(oo -> System.out.println("unknown: " + oo));
-		
-		System.out.println(s);
-	}
 }
