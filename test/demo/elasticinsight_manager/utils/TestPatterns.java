@@ -84,7 +84,5 @@ public class TestPatterns {
 		
 		assertEquals("Should pass condition and assign accordingly", "1: class java.lang.Double 2: class java.lang.Double", _retVal);
 	}
-	
-	//TODO test otherwise
-	//TODO integrate test coverage
+	//TODO: handle otherwise cases
 }

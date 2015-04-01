@@ -1,8 +1,10 @@
 package demo.elasticinsight_manager.utils;
 
-// Immutable tuples class
-// Call t = Tuples._<n>(_1, ..., _n) and then t._1(), t._2() etc 
-
+/**
+ * Immutable tuples class
+ * Call t = Tuples._<n>(_1, ..., _n) and then t._1(), t._2() etc 
+ * Supports hashCode and equals
+ */
 public class Tuples {
 
 	public static <A, B> _2T<A, B> _2(A a, B b) { return new _2T<A, B>(a, b); }
@@ -16,6 +18,24 @@ public class Tuples {
 		private B _2;
 		public A _1() { return _1; }
 		public B _2() { return _2; }
+		@Override
+		public boolean equals(Object that_obj) {
+			if ( this == that_obj ) return true;
+			if ( !(that_obj instanceof _2T) ) return false;
+			_2T<?, ?> that = (_2T<?, ?>) that_obj;
+			if ((null == this._1) && (null != that._1)) return false;
+			if (!this._1.equals(that._1)) return false;
+			if ((null == this._2) && (null != that._2)) return false;
+			if (!this._2.equals(that._2)) return false;
+			return true;
+		}
+		@Override
+		public int hashCode() {
+			int code = 0;
+			if (null != _1) code += _1.hashCode();
+			if (null != _2) code += _2.hashCode();
+			return code;
+		}
 	}
 	public static class _3T<A, B, C> {
 		public _3T(A a, B b, C c) { _1 = a; _2 = b; _3 = c; }
@@ -25,6 +45,27 @@ public class Tuples {
 		public A _1() { return _1; }
 		public B _2() { return _2; }
 		public C _3() { return _3; }
+		@Override
+		public boolean equals(Object that_obj) {
+			if ( this == that_obj ) return true;
+			if ( !(that_obj instanceof _3T) ) return false;
+			_3T<?, ?, ?> that = (_3T<?, ?, ?>) that_obj;
+			if ((null == this._1) && (null != that._1)) return false;
+			if (!this._1.equals(that._1)) return false;
+			if ((null == this._2) && (null != that._2)) return false;
+			if (!this._2.equals(that._2)) return false;
+			if ((null == this._3) && (null != that._3)) return false;
+			if (!this._3.equals(that._3)) return false;
+			return true;
+		}
+		@Override
+		public int hashCode() {
+			int code = 0;
+			if (null != _1) code += _1.hashCode();
+			if (null != _2) code += _2.hashCode();
+			if (null != _3) code += _3.hashCode();
+			return code;
+		}
 	}
 	public static class _4T<A, B, C, D> {
 		public _4T(A a, B b, C c, D d) { _1 = a; _2 = b; _3 = c; _4 = d;}
@@ -36,6 +77,30 @@ public class Tuples {
 		public B _2() { return _2; }
 		public C _3() { return _3; }
 		public D _4() { return _4; }
+		@Override
+		public boolean equals(Object that_obj) {
+			if ( this == that_obj ) return true;
+			if ( !(that_obj instanceof _4T) ) return false;
+			_4T<?, ?, ?, ?> that = (_4T<?, ?, ?, ?>) that_obj;
+			if ((null == this._1) && (null != that._1)) return false;
+			if (!this._1.equals(that._1)) return false;
+			if ((null == this._2) && (null != that._2)) return false;
+			if (!this._2.equals(that._2)) return false;
+			if ((null == this._3) && (null != that._3)) return false;
+			if (!this._3.equals(that._3)) return false;
+			if ((null == this._4) && (null != that._4)) return false;
+			if (!this._4.equals(that._4)) return false;
+			return true;
+		}
+		@Override
+		public int hashCode() {
+			int code = 0;
+			if (null != _1) code += _1.hashCode();
+			if (null != _2) code += _2.hashCode();
+			if (null != _3) code += _3.hashCode();
+			if (null != _4) code += _4.hashCode();
+			return code;
+		}
 	}
 	public static class _5T<A, B, C, D, E> {
 		public _5T(A a, B b, C c, D d, E e) { _1 = a; _2 = b; _3 = c; _4 = d; _5 = e; }
@@ -49,9 +114,39 @@ public class Tuples {
 		public C _3() { return _3; }
 		public D _4() { return _4; }
 		public E _5() { return _5; }
+		@Override
+		public boolean equals(Object that_obj) {
+			if ( this == that_obj ) return true;
+			if ( !(that_obj instanceof _5T) ) return false;
+			_5T<?, ?, ?, ?, ?> that = (_5T<?, ?, ?, ?, ?>) that_obj;
+			if ((null == this._1) && (null != that._1)) return false;
+			if (!this._1.equals(that._1)) return false;
+			if ((null == this._2) && (null != that._2)) return false;
+			if (!this._2.equals(that._2)) return false;
+			if ((null == this._3) && (null != that._3)) return false;
+			if (!this._3.equals(that._3)) return false;
+			if ((null == this._4) && (null != that._4)) return false;
+			if (!this._4.equals(that._4)) return false;
+			if ((null == this._5) && (null != that._5)) return false;
+			if (!this._5.equals(that._5)) return false;
+			return true;
+		}
+		@Override
+		public int hashCode() {
+			int code = 0;
+			if (null != _1) code += _1.hashCode();
+			if (null != _2) code += _2.hashCode();
+			if (null != _3) code += _3.hashCode();
+			if (null != _4) code += _4.hashCode();
+			if (null != _5) code += _5.hashCode();
+			return code;
+		}
 	}
 	
+	//(Write a script to auto-generate these up to a bigger number)
+	
 	// Example code
+	//TODO: move to test directory (+some tests)
 	public static void main(String[] args) {
 		final String s = "test";
 		final Boolean b = false;

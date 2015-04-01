@@ -1,5 +1,6 @@
 package demo.elasticinsight_manager.server;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -31,18 +32,39 @@ public class TitanServer implements GraphDbService {
 	
 	// Debug
 	
-	protected static boolean DEBUG = false;
-	protected static boolean INFO = true;
+	protected static final boolean DEBUG = false;
+	protected static final boolean INFO = true;
+	
 	
 	////////////////////////////////////////////////
 	
 	// Implementation
+
+	protected static final String _OPERATIONAL_PATH = "/tmp/berkeley-insight";
 	
-	protected TitanServer() {} // (can only create via DI)
+	// Test-mode-specific params:
+	protected static final String _TEST_PATH = "/tmp/test-berkeley-insight";
+	protected static boolean _test_mode = false;
+	
+	protected TitanServer() {} // (can only create via DI or from test mode)
 	
 	protected static TitanGraph _graph = null;
 	protected static long _last_graph_update = 0L; 
 	public static final long TITAN_TIMEOUT_MS = 30000L;
+	
+	protected static String _db_path = _OPERATIONAL_PATH;
+	protected static void setTestMode(boolean test_mode) {
+		synchronized (_monitor_thread) {
+			_test_mode = test_mode;
+			if (test_mode) {
+				_db_path = _TEST_PATH;
+			}
+			else {
+				_db_path = _OPERATIONAL_PATH;
+			}
+			_graph = null;
+		}
+	}
 	
 	static class TitanMonitorThread extends Thread {
 		public void run() {
@@ -177,7 +199,7 @@ public class TitanServer implements GraphDbService {
 				// (inner class that we need in the pipeline)
 				
 				//TODO: parallelize these streams?
-				Optionals.ofNullable((BasicDBList) annotations.get("a"))
+				Optionals.ofNullable((Collection<?>) annotations.get("a"))
 					.stream()
 					.map(assoc -> (BasicDBObject)assoc).map(assoc -> {
 						final Inner_ObjSubjVerb osv = new Inner_ObjSubjVerb();
@@ -279,7 +301,7 @@ public class TitanServer implements GraphDbService {
 		}
 		if (null == _graph) {
 			//TODO: (temp graph name for demo purposeS)
-			_graph = create("/tmp/berkeley-insight");
+			_graph = create(_OPERATIONAL_PATH);
 		}
 	}
 	
@@ -289,9 +311,17 @@ public class TitanServer implements GraphDbService {
         final TitanFactory.Builder config = TitanFactory.build();
         config.set("storage.backend", "berkeleyje");
         config.set("storage.directory", directory);
-        config.set("index."+INDEX_NAME+".backend","elasticsearch");
-        config.set("index."+INDEX_NAME+".hostname","127.0.0.1");
-        config.set("index."+INDEX_NAME+".elasticsearch.client-only",true);
+        if (_test_mode) {
+            config.set("index."+INDEX_NAME+".backend","elasticsearch");
+            config.set("index."+INDEX_NAME + ".directory", directory + java.io.File.separator + "es");
+            config.set("index."+INDEX_NAME+".elasticsearch.local-mode",true);
+            config.set("index."+INDEX_NAME+".elasticsearch.client-only",false);
+        }
+        else {
+            config.set("index."+INDEX_NAME+".backend","elasticsearch");
+	        config.set("index."+INDEX_NAME+".hostname","127.0.0.1");
+	        config.set("index."+INDEX_NAME+".elasticsearch.client-only",true);
+        }        
         
         final TitanGraph graph = config.open();
         
@@ -316,16 +346,18 @@ public class TitanServer implements GraphDbService {
         catch (Exception e) {
         	// (this just means that it's already been built)
         }
-        //TEST
-        //com.thinkaurelius.titan.example.GraphOfTheGodsFactory.load(graph);
         return graph;
     }
 
+	///////////////////////////////////////////////////////////////////////
+	//
     // Example
 	public static void main(String[] args) throws Exception {
+		TitanServer.setTestMode(true);
 		TitanServer me = new TitanServer();
 		System.out.println("Creating graph:");
-		final TitanGraph g = me.create("/tmp/berkeley-insight/");
+		final TitanGraph g = me.create(TitanServer._TEST_PATH);
+        com.thinkaurelius.titan.example.GraphOfTheGodsFactory.load(g);
 		System.out.println("Created graph:");
 		g.shutdown();
 		System.out.println("Shutting down:");
